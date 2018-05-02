@@ -13,3 +13,25 @@
   <?php endif; //carrousel_logos?>
 </div><!-- #carrousel_clientes -->
 
+
+// Las ultimas 3 noticias
+
+<?php
+  $args = array(
+        'post_type' => 'post',
+        'posts_per_page'         => '3'
+
+    );
+$the_query = new WP_Query( $args );
+?>
+<?php if ( $the_query->have_posts() ) : ?>
+  <?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
+    <div class="col">
+      <img src="<?php the_post_thumbnail_url();?>" alt="">
+      <h4><?php the_title(); ?></h4>
+      <p><?php the_excerpt(); ?></p>
+      <a href="<?php the_permalink();?>" class="btn verde">Leer más</a>
+    </div><!-- .col -->
+  <?php endwhile; ?>
+  <?php wp_reset_postdata(); ?>
+<?php endif; ?>
