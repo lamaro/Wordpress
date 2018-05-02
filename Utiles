@@ -1,0 +1,15 @@
+//ACF Contenido Flexible con Slick
+
+<div id="carrousel_clientes">
+  <?php if( have_rows('carrousel_logos') ):?>
+    <?php  while ( have_rows('carrousel_logos') ) : the_row(); ?>
+      <?php  if( get_row_layout() == 'logo' ):  //notas?>
+        <div class="carrousel_item">
+          <a href="<?php the_sub_field('link');?>" target="_blank"><img src="<?php the_sub_field('logo_imagen');?>" alt="<?php the_sub_field('empresa');?>"></a>
+        </div>
+        <?php wp_reset_postdata(); // IMPORTANTE ?>
+      <?php  endif; ?>
+    <?php  endwhile; ?>
+  <?php endif; //carrousel_logos?>
+</div><!-- #carrousel_clientes -->
+
