@@ -35,3 +35,32 @@ $the_query = new WP_Query( $args );
   <?php endwhile; ?>
   <?php wp_reset_postdata(); ?>
 <?php endif; ?>
+
+
+//Contenido flexible con campos de un post
+
+//repeated field: directivos, layout: miembro_directorio, row tipo object: directivo
+<?php if( have_rows('directivos') ):?>
+  <?php  while ( have_rows('directivos') ) : the_row(); ?>
+    <?php  if( get_row_layout() == 'miembro_directorio' ):  //Destacadas?>
+      <?php $directivo = get_sub_field('directivo');?>
+      <?php if( $directivo ): $post = $directivo; setup_postdata( $post ); ?>
+        <div class="col">
+          <img src="<?php the_post_thumbnail_url();?>">
+          <div class="data">
+            <h3><?php the_title();?></h3>
+            <p class="cargo"><?php the_field('cargo');?></p>
+            <p><?php the_field('bio');?></p>
+          </div>
+        </div><!-- .col -->
+      <?php wp_reset_postdata(); // IMPORTANTE ?>
+      <?php endif; ?>
+    <?php  endif; ?>
+  <?php  endwhile; ?>
+<?php endif;?>
+
+
+//Objeto Post
+
+
+
