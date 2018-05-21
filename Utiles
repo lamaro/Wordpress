@@ -1,3 +1,12 @@
+Redirigir siempre a https (va en htaccess)
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 //ACF Contenido Flexible con Slick
 
 <div id="carrousel_clientes">
