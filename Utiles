@@ -13,6 +13,9 @@ RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
+Luego en header.php 
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
 //ACF Contenido Flexible con Slick
 
 <div id="carrousel_clientes">
