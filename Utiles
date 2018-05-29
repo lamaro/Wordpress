@@ -1,3 +1,10 @@
+
+Remover Default Jquery en Wordpress (Colocar en header.php antes del include del head)
+
+<?php wp_deregister_script('jquery'); ?>
+
+
+
 Escapar comillas dobles en Meta description usando el excerpt
 
 <meta name="description" content="<?php echo esc_attr(htmlentities(get_the_excerpt()));  ?>">
