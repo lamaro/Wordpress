@@ -1,11 +1,106 @@
 
-Remover Default Jquery en Wordpress (Colocar en header.php antes del include del head)
+//Quitar la etiqueta hentry (search Console webmaster tools. error)
+//Remove the Hentry Class
+function remove_hentry_post_class( $classes ) {
+    $classes = array_diff( $classes, array( 'hentry' ) );
+    return $classes;
+}
+add_filter( 'post_class', 'remove_hentry_post_class' );
+
+
+//Selector de post types en Rules Location de ACF (jun/2018)
+
+// add group and filter
+add_filter('acf/location/rule_types', 'acf_my_custom_post_type_filters');
+function acf_my_custom_post_type_filters($choices) {
+	// we want to insert it after pages
+	// so it's in a nice order
+	if (!isset($choices['Bloques'])) {
+		$new_choices = array();
+		foreach ($choices as $key => $value) {
+			$new_choices[$key] = $value;
+			if ($key == 'Page') {
+				$new_choices['Bloques'] = array();
+			}
+		} // end foreach choices
+		$choices = $new_choices;
+	} // end if not in choices
+	if (!isset($choices['Bloques']['post'])) {
+		$choices['Bloques']['my_custom_post_type_post'] = 'Bloques';
+	}
+	return $choices;
+}
+
+// add choices
+add_filter('acf/location/rule_values/my_custom_post_type_post', 'acf_location_rules_values_my_custom_post_type');
+function acf_location_rules_values_my_custom_post_type($choices) {
+	// adjust the for loop to the number of levels you need
+	$args = array(
+		'post_type' => 'bloque',
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+		'orderby' => array('title' => 'ASC', 'date' => 'DESC'),
+	);
+	$query = new WP_Query($args);
+	//echo '<pre>'; print_r($query->posts); echo '</pre>';
+	if (count($query->posts)) {
+		foreach ($query->posts as $post) {
+			$choices[$post->ID] = $post->post_title;
+		}
+	}
+	return $choices;
+}
+
+// use the standard post matching
+// this is copied directly form ACF
+add_filter('acf/location/rule_match/my_custom_post_type_post', 'acf_location_rule_match_my_custom_post_type_post', 10, 3);
+function acf_location_rule_match_my_custom_post_type_post($match, $rule, $options) {
+	$post_id = $options['post_id'];
+	if( !$post_id ) {
+		return false;
+	}
+	if ($rule['operator'] == "==") {
+		$match = ($options['post_id'] == $rule['value']);
+	} elseif ($rule['operator'] == "!=") {
+		$match = ($options['post_id'] != $rule['value']);
+	}
+	return $match;
+}
+
+
+/* Filtro para selectores notas ACF objetc type - Lean 22/11 */
+
+add_filter('acf/fields/post_object/query', 'change_posts_order', 10, 3);
+
+function change_posts_order( $args, $field, $post )
+{
+$args['post_status'] = 'publish';
+$args['date_query'] = array(
+        array(
+            'column' => 'post_date_gmt',
+            'after'  => '30 days ago',
+        )
+);
+
+return $args;
+}
+
+//Cambiar los separadores del titulo a pipe - minimal
+function wploop_change_separator()
+{
+return '|';
+}
+add_filter('document_title_separator', 'wploop_change_separator');
+
+
+
+//Remover Default Jquery en Wordpress (Colocar en header.php antes del include del head)
 
 <?php wp_deregister_script('jquery'); ?>
 
 
 
-Escapar comillas dobles en Meta description usando el excerpt
+//Escapar comillas dobles en Meta description usando el excerpt
 
 <meta name="description" content="<?php echo esc_attr(htmlentities(get_the_excerpt()));  ?>">
 
