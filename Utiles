@@ -1,4 +1,14 @@
 
+//Query con custom fields
+$args = array( 
+    'posts_per_page' => -1, 
+    'offset'         => 0,    
+    'post_type'      => 'portfolio',
+    'meta_key'       => 'up_count'
+    'orderby'        => 'meta_value_num'
+    'order'          => 'DESC',
+);
+
 //Quitar la etiqueta hentry (search Console webmaster tools. error)
 //Remove the Hentry Class
 function remove_hentry_post_class( $classes ) {
