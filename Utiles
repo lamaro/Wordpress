@@ -1,3 +1,14 @@
+//Include Hoja de estilos con version, evita cache del browser
+
+ function theme_styles()
+ {
+   global $ver_num;
+   $ver_num = mt_rand();
+   wp_enqueue_style( 'style-css', get_template_directory_uri() . '/style.css', array(), $ver_num, 'all' );
+ }
+ add_action('wp_enqueue_scripts', 'theme_styles');
+
+
 
 //Query con custom fields
 $args = array( 
