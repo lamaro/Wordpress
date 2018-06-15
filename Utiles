@@ -1,3 +1,12 @@
+//Woocommerce - ver si un cliente compró un producto - web alok
+
+$current_user = wp_get_current_user();
+if ( ! wc_customer_bought_product( $current_user->user_email, $current_user->ID, $product->id ) ) {
+    _e( 'This content is only visible for users who bought this product.' );
+}
+
+
+
 //Include Hoja de estilos con version, evita cache del browser
 
  function theme_styles()
