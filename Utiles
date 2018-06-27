@@ -1,3 +1,40 @@
+//Loop para archive con paginación
+
+$args = array(
+	'post_type' => 'rmcc_blurb',
+);
+$query = new WP_query ( $args );
+//usar $query->have_posts()
+
+
+<?php if ( have_posts() ) : $postCount = 1;?>
+	<?php	while ( have_posts() ) : $postCount++; the_post(); //Loop de cada post?>
+		<?php if($postCount == 2) { //El primer post de cada página del arcchive?>
+			<article id="post-<?php the_ID(); ?>" class="destacado">
+			<?php }else{ //post no destacados?>
+				<article id="post-<?php the_ID(); ?>" class="post-normal">
+			<?php } //postCount?>
+			<h3><a href="<?php the_permalink(); ?>"><?php echo tituloNota($post->ID,4); //corta a 4 palabras ?></a></h3>
+			<?php if ( has_post_thumbnail() ) { ?>
+				<a href="<?php the_permalink(); ?>">
+					<?php the_post_thumbnail( 'medium', array('class' => 'left','alt'	=> get_the_title()) );?>
+				</a>
+			<?php }?>
+			<?php echo excerptNota($post->ID,15); //Excerpt nota - corta a 15 palabras, ver si esta en el diseño. ?>
+		</article>
+	<?php	endwhile; //loop?>
+
+	<?php	//Paginación, tiene que ir dentro del if have_posts
+	the_posts_pagination( array(
+	'prev_text' => 'Anteriores',
+	'next_text' => 'Siguientes',
+	'screen_reader_text' => 'Más notas',
+	//'before_page_number' => '<span class="meta-nav screen-reader-text">pag</span>',
+	) );
+	?>
+<?php endif; //have_posts?>
+
+
 //Woocommerce - ver si un cliente compró un producto - web alok
 
 $current_user = wp_get_current_user();
