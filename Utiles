@@ -1,3 +1,12 @@
+//Contenido flexible sin loop, trayendo arrays por id de posicion
+<!-- Las 4 imagenes -->
+<?php $imagenesActividades = get_field('imagenes_ac'); ?>
+
+<?php echo $imagenesActividades[0]["item"];  //URL Imagen 1 vertical left ?>
+<?php echo $imagenesActividades[1]["item"]; //URL Imagen 2 top ?>
+<?php echo $imagenesActividades[2]["item"]; //URL Imagen 3 bottom ?>
+<?php echo $imagenesActividades[3]["item"]; //URL Imagen 4 vertical right ?>
+
 //Loop para archive con paginación
 
 $args = array(
