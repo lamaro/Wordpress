@@ -1,4 +1,19 @@
-Custom WP_Query con paginación
+//Custom Query de Post type usando Custom Field
+
+<?php
+$tipoTraining = get_field('training_level');
+$query = new WP_Query( array(
+	'post_type' => 'training',
+	'posts_per_page' => 5,
+	'meta_key' => 'training_level',
+	'meta_value' => $tipoTraining
+) );
+?>
+
+
+
+
+//Custom WP_Query con paginación
 
 
 <?php
