@@ -1,3 +1,6 @@
+//Breadcrumbs function
+<li><?php echo get_category_parents( $idCat, true, ' / ' ); ?></li>
+
 //Custom Query de Post type usando Custom Field
 
 <?php
