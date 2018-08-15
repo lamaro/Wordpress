@@ -59,7 +59,7 @@ $query = new WP_Query( array(
             'add_fragment' => '',
         ) );
 				*/
-				wp_pagenavi(); //si se usa el plugin PageNavi
+				wp_pagenavi(array( 'query' => $query )); //si se usa el plugin PageNavi
     ?>
 </div>
 
