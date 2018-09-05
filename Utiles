@@ -1,3 +1,8 @@
+//Escapar caracteres especiales 
+esc_attr()
+
+
+
 //Woocommerce theme support con tamaños de thumbs
 
 function mytheme_add_woocommerce_support() { // Agrego soporte para WooCommerce
