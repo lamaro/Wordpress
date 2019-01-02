@@ -97,6 +97,7 @@ $query = new WP_Query( array(
     <h2><a href="<?php the_permalink(); ?>" title="Read"><?php the_title(); ?></a></h2>
     <?php the_excerpt(); ?>
     <?php echo get_the_date(); ?>
+    <?php echo $featured_img_url = get_the_post_thumbnail_url(get_the_ID(),'full'); ?>
 
 <?php endwhile; ?>
 <!-- end loop -->
