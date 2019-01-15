@@ -1,3 +1,8 @@
+//Agregar soporte para mensajes en woocommerce (alertas tipo cart empty
+
+do_action(wc_print_notices());
+
+
 Registrar sidebar functions.php
 
 function wpb_widgets_init() {
