@@ -1,3 +1,56 @@
+// Paginas con Ajax
+
+en single.php
+
+<?php /*
+    $post = get_post($_POST['id']); // this line is used to define the {id:post_id} which you will see in another snippet further down
+		if ($post) { // this is necessary and is a replacement of the typical `if (have_posts())`
+        setup_postdata($post); // needed to format custom query results for template tags ?>
+        <!-- everything below this line is your typical page template coding -->
+        <div <?php post_class() ?> id="post-<?php the_ID(); ?>">
+
+            <h2><?php the_title(); ?></h2>
+						<h3><?php the_field(titulo);?></h3>
+            <div class="entry">
+                <?php the_content(); ?>
+            </div>
+
+        </div>
+
+<?php }  */?>
+
+
+En main.js
+
+
+$.ajaxSetup({cache:false});
+$(".link_nosotros").click(function(e){ // line 5
+		//pageurl = $(this).attr('href');
+		//if(pageurl!=window.location) {
+		//		window.history.pushState({path: pageurl}, '', pageurl);
+		//}
+
+		var post_id = $(this).attr("rel");
+		$("#contenido").load("https://nomada.com/nosotros",{id:post_id}); // line 12
+		return false;
+});
+$(".link_trabajos").click(function(e){ // line 5
+	//	pageurl = $(this).attr('href');
+	//	if(pageurl!=window.location) {
+	//			window.history.pushState({path: pageurl}, '', pageurl);
+	//	}
+
+		var post_id = $(this).attr("rel");
+		$("#contenido").load("https://nomada.com/trabajos",{id:post_id}); // line 12
+		return false;
+});
+
+
+Los templates php se deben llamar igual que el slug
+
+
+
+
 //Agregar soporte para mensajes en woocommerce (alertas tipo cart empty
 
 do_action(wc_print_notices());
