@@ -1,3 +1,26 @@
+//Custom Query con Post type, y custom field (object type).
+$params = array(
+	    'post_type' => 'product',
+			'meta_query'		=> array(
+			'relation'		=> 'AND',
+				array(
+					'key' => 'artista_relacionado',
+					'value' =>  get_the_ID(),
+					'compare' => 'LIKE'
+				),
+				array(
+	        'key' => '_stock_status',
+	        'value' => 'instock'
+	      )
+			)
+
+	  );
+	  $wc_query = new WP_Query($params);
+
+
+
+
+
 //Registrar campos en api rest
 
 add_action( 'rest_api_init', 'add_thumbnail_to_JSON' );
