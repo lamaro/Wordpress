@@ -1,3 +1,25 @@
+//Remover una categoria de la busqueda de productos
+
+// Excluir categoria packs del buscador
+function wpse188669_pre_get_posts( $query ) {
+   if ( ! is_admin() && $query->is_main_query() && $query->is_search()) {
+       $query->set( 'post_type', array( 'product' ) );
+       $tax_query = array(
+           array(
+               // likely what you are after
+               'taxonomy' => 'product_cat',
+               'field'   => 'slug',
+               'terms'   => 'packs',
+               'operator' => 'NOT IN',
+           ),
+       );
+       $query->set( 'tax_query', $tax_query );
+	}
+}
+add_action( 'pre_get_posts', 'wpse188669_pre_get_posts' );
+
+
+
 //Custom Query con Post type, y custom field (object type).
 $params = array(
 	    'post_type' => 'product',
