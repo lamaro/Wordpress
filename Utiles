@@ -1,3 +1,22 @@
+//Cambia texto
+add_filter('gettext', 'translate_volv_tienda');
+add_filter('ngettext', 'translate_volv_tienda');
+function translate_volv_tienda($translated) {
+$translated = str_ireplace('Volver a la tienda', 'Comprar entradas', $translated);
+return $translated;
+}
+
+//Quita link a productos en checkout woocommerce
+add_filter('woocommerce_cart_item_permalink','__return_false');
+
+// Cambia el link de Volver a la tienda woocommerce
+add_filter( 'woocommerce_return_to_shop_redirect', 'bbloomer_change_return_shop_url' );
+ 
+function bbloomer_change_return_shop_url() {
+return 'https://juc.maimonides.edu/inscripcion';
+}
+
+
 //Quitar campos del checkout woocommerce
 
 function custom_override_checkout_fields( $fields ) {
