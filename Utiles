@@ -1,3 +1,23 @@
+//301 Redirects en .htacess
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# BEGIN Permanent URL redirects
+RewriteRule ^about-cs\.html$ /about-christian-simpson/? [L,R=301,NC]
+RewriteRule ^entrepreneurial-success\.html$ /entrepreneurial-success/? [L,R=301,NC] 
+# other 301 rules here
+
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+
+
 //Cambia texto
 add_filter('gettext', 'translate_volv_tienda');
 add_filter('ngettext', 'translate_volv_tienda');
