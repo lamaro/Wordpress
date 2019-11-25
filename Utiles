@@ -1,3 +1,20 @@
+//CODIGO JS EN EL HEAD (Google Tag Conversion, en página Thank you (order received Woocommerce)
+
+add_action( 'wp_head', 'my_google_conversion' );
+function my_google_conversion(){
+    if( is_wc_endpoint_url( 'order-received' ) ) :
+        $order_id = absint( get_query_var('order-received') ); // Get order ID
+        if( get_post_type( $order_id ) !== 'shop_order' ) return; // Exit
+        $order = wc_get_order( $order_id );
+        $order_num = $order->get_order_number();
+        $order_total = $order->get_total();
+    ?>
+    <!-- Event snippet for Compras conversion page --> <script> gtag('event', 'conversion', { 'send_to': 'AW-714870159/FaohCN743akBEI-b8NQC', 'value': <?php echo $order_total;?>, 'currency': 'CLP', 'transaction_id': '<?php echo $order_num;?>' }); </script>
+    <?php   
+    endif;
+}
+
+
 //301 Redirects en .htacess
 
 # BEGIN WordPress
