@@ -1,3 +1,90 @@
+<?php 
+/* ----------- OCULTO RANGO DE PRECIO EN PRODUCTO VARIABLE Y LO MUESTRO NORMAL  ---------- */
+
+add_filter( 'woocommerce_variable_sale_price_html', 'bbloomer_variation_price_format', 10, 2 );
+
+add_filter( 'woocommerce_variable_price_html', 'bbloomer_variation_price_format', 10, 2 );
+
+function bbloomer_variation_price_format( $price, $product ) {
+
+ if (is_product()) {
+    return $product->get_price();
+ } else {
+        // Main Price
+        $prices = array( $product->get_variation_price( 'min', true ), $product->get_variation_price( 'max', true ) );
+        $price = $prices[0] !== $prices[1] ? sprintf( __( '%1$s', 'woocommerce' ), wc_price( $prices[0] ) ) : wc_price( $prices[0] );
+
+        // Sale Price
+        $prices = array( $product->get_variation_regular_price( 'min', true ), $product->get_variation_regular_price( 'max', true ) );
+        sort( $prices );
+        $saleprice = $prices[0] !== $prices[1] ? sprintf( __( '%1$s', 'woocommerce' ), wc_price( $prices[0] ) ) : wc_price( $prices[0] );
+
+        if ( $price !== $saleprice ) {
+        $price = '<del>' . $saleprice . '</del> <ins>' . $price . '</ins>';
+        }
+        return $price;
+         }
+
+}
+
+// show variation price
+add_filter('woocommerce_show_variation_price', function() {return true;});
+
+//override woocommerce function
+function woocommerce_template_single_price() {
+    global $product;
+    if ( ! $product->is_type('variable') ) { 
+        woocommerce_get_template( 'single-product/price.php' );
+    }
+}
+
+function shuffle_variable_product_elements(){
+    if ( is_product() ) {
+        global $post;
+        $product = wc_get_product( $post->ID );
+        if ( $product->is_type( 'variable' ) ) {
+            remove_action( 'woocommerce_single_variation', 'woocommerce_single_variation', 10 );
+            add_action( 'woocommerce_before_variations_form', 'woocommerce_single_variation', 20 );
+
+            remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
+            add_action( 'woocommerce_before_variations_form', 'woocommerce_template_single_title', 10 );
+
+            remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
+            add_action( 'woocommerce_before_variations_form', 'woocommerce_template_single_excerpt', 30 );
+        }
+    }
+}
+add_action( 'woocommerce_before_single_product', 'shuffle_variable_product_elements' );
+
+
+//WOOCOMMERCE COUNT IN HEADER
+
+
+//in header.php
+$items_count = WC()->cart->get_cart_contents_count(); 
+?>
+    <div id="mini-cart-count"><?php echo $items_count ? $items_count : '&nbsp;'; ?></div>
+<?php
+
+//in functions.php
+add_filter( 'woocommerce_add_to_cart_fragments', 'wc_refresh_mini_cart_count');
+function wc_refresh_mini_cart_count($fragments){
+    ob_start();
+    $items_count = WC()->cart->get_cart_contents_count();
+    ?>
+    <div id="mini-cart-count"><?php echo $items_count ? $items_count : '&nbsp;'; ?></div>
+    <?php
+        $fragments['#mini-cart-count'] = ob_get_clean();
+    return $fragments;
+}
+
+
+
+
+
+
+
+
 //CODIGO JS EN EL HEAD (Google Tag Conversion, en página Thank you (order received Woocommerce)
 
 add_action( 'wp_head', 'my_google_conversion' );
@@ -15,24 +102,24 @@ function my_google_conversion(){
 }
 
 
-//301 Redirects en .htacess
+// //301 Redirects en .htacess
 
-# BEGIN WordPress
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
+// # BEGIN WordPress
+// <IfModule mod_rewrite.c>
+// RewriteEngine On
+// RewriteBase /
 
-# BEGIN Permanent URL redirects
-RewriteRule ^about-cs\.html$ /about-christian-simpson/? [L,R=301,NC]
-RewriteRule ^entrepreneurial-success\.html$ /entrepreneurial-success/? [L,R=301,NC] 
-# other 301 rules here
+// # BEGIN Permanent URL redirects
+// RewriteRule ^about-cs\.html$ /about-christian-simpson/? [L,R=301,NC]
+// RewriteRule ^entrepreneurial-success\.html$ /entrepreneurial-success/? [L,R=301,NC] 
+// # other 301 rules here
 
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-</IfModule>
-# END WordPress
+// RewriteRule ^index\.php$ - [L]
+// RewriteCond %{REQUEST_FILENAME} !-f
+// RewriteCond %{REQUEST_FILENAME} !-d
+// RewriteRule . /index.php [L]
+// </IfModule>
+// # END WordPress
 
 
 //Cambia texto
@@ -153,9 +240,9 @@ function get_image_src( $object, $field_name, $request ) {
 
 // Paginas con Ajax
 
-en single.php
+//en single.php
 
-<?php /*
+ /*
     $post = get_post($_POST['id']); // this line is used to define the {id:post_id} which you will see in another snippet further down
 		if ($post) { // this is necessary and is a replacement of the typical `if (have_posts())`
         setup_postdata($post); // needed to format custom query results for template tags ?>
@@ -173,8 +260,9 @@ en single.php
 <?php }  */?>
 
 
-En main.js
 
+En main.js
+<script>
 
 $.ajaxSetup({cache:false});
 $(".link_nosotros").click(function(e){ // line 5
@@ -197,9 +285,11 @@ $(".link_trabajos").click(function(e){ // line 5
 		$("#contenido").load("https://nomada.com/trabajos",{id:post_id}); // line 12
 		return false;
 });
+</script>
 
+<?php
 
-Los templates php se deben llamar igual que el slug
+//Los templates php se deben llamar igual que el slug
 
 
 
@@ -209,7 +299,7 @@ Los templates php se deben llamar igual que el slug
 do_action(wc_print_notices());
 
 
-Registrar sidebar functions.php
+//Registrar sidebar functions.php
 
 function wpb_widgets_init() {
  
@@ -227,13 +317,15 @@ add_action( 'widgets_init', 'wpb_widgets_init' );
 
 //Luego en el theme
 
+?>
+
 <?php if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
     <div id="secondary" class="widget-area" role="complementary">
     <?php dynamic_sidebar( 'sidebar-1' ); ?>
     </div>
 <?php endif; ?>
 
-
+<?php
 //Compatibilidad de themes de woocommerce - toma carpeta child dentro de carpeta del theme
 
 function mytheme_add_woocommerce_support() { // Agrego soporte para WooCommerce
@@ -269,6 +361,7 @@ function mytheme_add_woocommerce_support() { // Agrego soporte para WooCommerce
 ) );
 }
 add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
+?>
 
 //Breadcrumbs function
 <li><?php echo get_category_parents( $idCat, true, ' / ' ); ?></li>
@@ -345,13 +438,6 @@ $query = new WP_Query( array(
 
 
 
-
-
-
-
-
-
-
 //Contenido flexible sin loop, trayendo arrays por id de posicion
 <!-- Las 4 imagenes -->
 <?php $imagenesActividades = get_field('imagenes_ac'); ?>
@@ -397,7 +483,7 @@ $query = new WP_query ( $args );
 	?>
 <?php endif; //have_posts?>
 
-
+<?php
 //Woocommerce - ver si un cliente compró un producto - web alok
 
 $current_user = wp_get_current_user();
@@ -525,7 +611,7 @@ add_filter('document_title_separator', 'wploop_change_separator');
 
 
 //Remover Default Jquery en Wordpress (Colocar en header.php antes del include del head)
-
+?>
 <?php wp_deregister_script('jquery'); ?>
 
 
@@ -562,6 +648,7 @@ Luego en header.php
     <?php  endwhile; ?>
   <?php endif; //carrousel_logos?>
 </div><!-- #carrousel_clientes -->
+
 
 
 // Las ultimas 3 noticias
@@ -609,7 +696,7 @@ $the_query = new WP_Query( $args );
   <?php  endwhile; ?>
 <?php endif;?>
 
-
+<?php 
 //Objeto Post
 
 
@@ -624,3 +711,4 @@ $args['order'] = 'desc';
 return $args;
 }
 
+?>
